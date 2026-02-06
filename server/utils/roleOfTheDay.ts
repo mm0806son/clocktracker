@@ -11,6 +11,10 @@ export async function roleOfTheDay() {
     },
   });
 
+  if (roleCount === 0) {
+    return null;
+  }
+
   const day = new Date().getDate();
 
   const roleIndex =
@@ -29,3 +33,4 @@ export async function roleOfTheDay() {
 
   return role;
 }
+
