@@ -1,15 +1,15 @@
 <template>
   <StandardTemplate>
     <section class="py-6">
-      <h2 class="font-sorts text-4xl text-center">Add Game</h2>
+      <h2 class="font-sorts text-4xl text-center">{{ t('pages.addGame.title') }}</h2>
       <p class="text-center italic text-stone-400 pt-6 text-sm">
-        Adding more than one game?
+        {{ t('pages.addGame.subtitle') }}
         <!-- @todo apply link version of Button? -->
         <button
           @click="initImportGames"
           class="underline italic dark:hover:text-white hover:text-black"
         >
-          Import multiple games
+          {{ t('pages.addGame.importMultiple') }}
         </button>
       </p>
       <ClientOnly>
@@ -23,7 +23,7 @@
             wide
             :disabled="inFlight"
           >
-            Reset Game
+            {{ t('gameEditor.resetGame') }}
           </Button>
         </div>
       </ClientOnly>
@@ -43,15 +43,19 @@ definePageMeta({
   middleware: "auth",
 });
 
+const { t } = useI18n();
+
 useHead({
-  title: "Add Game",
+  title: t("pages.addGame.title"),
 });
 
 const router = useRouter();
 const route = useRoute();
 const rolesStore = useRoles();
 const inFlight = ref(false);
-const userSettings = await useFetch("/api/settings");
+const userSettings = await useFetch("/api/settings", {
+  credentials: "include",
+});
 
 const importGamesDialogVisible = ref(false);
 
@@ -362,24 +366,22 @@ const formattedGame = computed(() => ({
 
 async function submitGame() {
   if (!game.win_v2) {
-    alert("Please select a win condition.");
+    alert(t("gameEditor.validationSelectWinCondition"));
     return;
   }
 
   const privacyNotice = (() => {
     if (game.privacy === "PUBLIC") {
-      return `, and this game will be publicly visible to anyone who visits the site.`;
+      return t("gameEditor.confirmPrivacyPublic");
     } else if (game.privacy === "PRIVATE") {
-      return `, and this game will be visible to your friends and anyone you share the link with.`;
+      return t("gameEditor.confirmPrivacyPrivate");
     } else {
-      return ", and this game will be visible to your friends.";
+      return t("gameEditor.confirmPrivacyFriendsOnly");
     }
   })();
   if (
     game.date !== dayjs().format("YYYY-MM-DD") ||
-    confirm(
-      `Are you sure you are ready to save this game? Any tagged players will be notified${privacyNotice}`
-    )
+    confirm(t("gameEditor.confirmReadyToSave") + privacyNotice)
   ) {
     inFlight.value = true;
 
@@ -399,7 +401,7 @@ async function submitGame() {
 }
 
 function resetGame() {
-  if (confirm("Are you sure you want to reset your game details?")) {
+  if (confirm(t("gameEditor.resetGameConfirm"))) {
     localStorage.removeItem("draftGame");
     Object.assign(game, {
       date: dayjs().format("YYYY-MM-DD"),

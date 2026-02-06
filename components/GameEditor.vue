@@ -3,14 +3,14 @@
     <fieldset
       class="flex flex-col gap-5 border rounded border-stone-500 p-4 my-3"
     >
-      <legend>Game Setup</legend>
+      <legend>{{ t('gameEditor.setup') }}</legend>
       <div class="w-full flex flex-col md:flex-row gap-5">
         <label v-if="!editingMultipleGames" class="flex-1">
-          <span class="block">Date</span>
+          <span class="block">{{ t('gameEditor.date') }}</span>
           <Input type="date" v-model="game.date" required />
         </label>
         <label class="flex-1">
-          <span class="block">Script</span>
+          <span class="block">{{ t('gameEditor.script') }}</span>
           <div class="flex items-center gap-1">
             <div v-if="game.script" class="flex-grow">{{ game.script }}</div>
             <Button
@@ -24,9 +24,9 @@
               }"
               image="investigator"
             >
-              <template v-if="editingMultipleGames">Not updated</template>
-              <template v-else-if="game.script === ''">Select Script</template>
-              <template v-else><span class="sr-only">Change script</span></template>
+              <template v-if="editingMultipleGames">{{ t('gameEditor.notUpdated') }}</template>
+              <template v-else-if="game.script === ''">{{ t('gameEditor.selectScript') }}</template>
+              <template v-else><span class="sr-only">{{ t('gameEditor.selectScript') }}</span></template>
             </Button>
           </div>
           <SelectScriptDialog
@@ -45,7 +45,7 @@
           class="flex flex-col gap-1"
         >
           <label>
-            <span class="block"> Script Version </span>
+            <span class="block">{{ t('gameEditor.scriptVersion') }}</span>
             <Input
               mode="select"
               v-if="!fetchingScriptVersions"
@@ -55,22 +55,22 @@
                 {{ version.version }}
               </option>
             </Input>
-            <div v-else>Loading...</div>
+            <div v-else>{{ t('gameEditor.scriptVersionLoading') }}</div>
           </label>
         </div>
         <div class="flex-1 flex flex-col justify-start">
           <label>
-            <span class="block">Storyteller</span>
+            <span class="block">{{ t('gameEditor.storyteller') }}</span>
             <TaggedUserInput
               v-model:value="game.storyteller"
               :users="potentialCoStorytellers"
-              :placeholder="editingMultipleGames ? 'Not updated' : ''"
+              :placeholder="editingMultipleGames ? t('gameEditor.notUpdated') : ''"
             />
           </label>
           <div class="flex gap-3">
             <label class="flex whitespace-nowrap items-center gap-2">
               <input type="checkbox" v-model="game.is_storyteller" />
-              <span class="block">I was a Storyteller</span>
+              <span class="block">{{ t('gameEditor.storytellerSelf') }}</span>
             </label>
             <label
               v-if="editingMultipleGames"
@@ -80,12 +80,12 @@
               }"
             >
               <input type="checkbox" v-model="noChangeToIsStoryteller" />
-              <span class="block">Not updated</span>
+              <span class="block">{{ t('gameEditor.notUpdated') }}</span>
             </label>
           </div>
         </div>
         <div class="flex-1 flex flex-col">
-          <span class="block">Co-Storytellers</span>
+          <span class="block">{{ t('gameEditor.coStorytellers') }}</span>
           <div v-for="(st, index) in game.co_storytellers" class="flex gap-1 mb-1">
             <TaggedUserInput
               v-model:value="game.co_storytellers[index]"
@@ -99,7 +99,7 @@
               color="negative"
               class="h-[2.5rem]"
             >
-              Remove storyteller
+              {{ t('gameEditor.removeStoryteller') }}
             </Button>
           </div>
           <Button
@@ -108,42 +108,40 @@
             icon="person-plus"
             class="w-full h-[2.5rem]"
           >
-            Add Storyteller
+            {{ t('gameEditor.addStoryteller') }}
           </Button>
         </div>
       </div>
       <div class="w-full flex flex-wrap gap-5">
         <label class="w-full md:w-auto">
-          <span class="block">Privacy</span>
+          <span class="block">{{ t('gameEditor.privacy') }}</span>
           <Input mode="select" v-model="game.privacy">
-            <option v-if="editingMultipleGames" value="">Not updated</option>
-            <option value="PUBLIC">Public</option>
-            <option value="PRIVATE">Private</option>
-            <option value="FRIENDS_ONLY">Friends Only</option>
+            <option v-if="editingMultipleGames" value="">{{ t('gameEditor.notUpdated') }}</option>
+            <option value="PUBLIC">{{ t('gameEditor.privacyPublic') }}</option>
+            <option value="PRIVATE">{{ t('gameEditor.privacyPrivate') }}</option>
+            <option value="FRIENDS_ONLY">{{ t('gameEditor.privacyFriendsOnly') }}</option>
           </Input>
         </label>
         <label class="w-full md:w-auto">
-          <span class="block">Location Type</span>
+          <span class="block">{{ t('gameEditor.locationType') }}</span>
           <Input mode="select" v-model="game.location_type">
-            <option v-if="editingMultipleGames" :value="undefined">
-              Not updated
-            </option>
-            <option value="ONLINE">Online</option>
-            <option value="IN_PERSON">In Person</option>
+            <option v-if="editingMultipleGames" :value="undefined">{{ t('gameEditor.notUpdated') }}</option>
+            <option value="ONLINE">{{ t('gameEditor.locationTypeOnline') }}</option>
+            <option value="IN_PERSON">{{ t('gameEditor.locationTypeInPerson') }}</option>
           </Input>
         </label>
         <label
           v-if="game.location_type === 'IN_PERSON'"
           class="w-full md:w-auto md:flex-1"
         >
-          <span class="block">Location</span>
+          <span class="block">{{ t('gameEditor.location') }}</span>
           <Input type="text" v-model="game.location" list="locations" />
           <datalist id="locations">
             <option v-for="location in myLocations" :value="location"></option>
           </datalist>
         </label>
         <label class="w-full md:w-auto md:flex-1">
-          <span class="block">Community</span>
+          <span class="block">{{ t('gameEditor.community') }}</span>
           <div class="flex gap-2">
             <Avatar
               v-if="game.community_id"
@@ -157,25 +155,21 @@
               v-model:value="game.community_name"
               :communities="myCommunities"
               inputClass="w-full border border-stone-500 rounded-md p-2 h-[2.5rem] text-lg bg-stone-600 disabled:bg-stone-700"
-              :placeholder="editingMultipleGames ? 'Not updated' : ''"
+              :placeholder="editingMultipleGames ? t('gameEditor.notUpdated') : ''"
             />
           </div>
         </label>
         <label class="w-1/3 md:w-auto">
-          <span class="block">Players</span>
+          <span class="block">{{ t('gameEditor.players') }}</span>
           <Input mode="select" v-model="game.player_count">
-            <option :value="null">
-              <template v-if="editingMultipleGames">Not updated</template>
-            </option>
+            <option :value="null"><template v-if="editingMultipleGames">{{ t('gameEditor.notUpdated') }}</template></option>
             <option v-for="i in 16" :value="i + 4">{{ i + 4 }}</option>
           </Input>
         </label>
         <label class="w-1/3 md:w-auto">
-          <span class="block">Travelers</span>
+          <span class="block">{{ t('gameEditor.travelers') }}</span>
           <Input mode="select" v-model="game.traveler_count">
-            <option :value="null">
-              <template v-if="editingMultipleGames">Not updated</template>
-            </option>
+            <option :value="null"><template v-if="editingMultipleGames">{{ t('gameEditor.notUpdated') }}</template></option>
             <option v-for="i in 5" :value="i">{{ i }}</option>
           </Input>
         </label>
@@ -183,7 +177,7 @@
           v-if="!editingMultipleGames"
           class="w-1/3 md:w-auto flex flex-col gap-2 items-start md:items-center"
         >
-          <span class="block">Record Grimoire</span>
+          <span class="block">{{ t('gameEditor.recordGrimoire') }}</span>
           <Toggle v-model="advancedModeEnabled" />
         </label>
       </div>
@@ -197,7 +191,7 @@
       id="game-results"
       class="flex flex-col md:flex-row gap-5 border rounded border-stone-500 p-4 my-3"
     >
-      <legend>Game Results</legend>
+      <legend>{{ t('gameEditor.results') }}</legend>
       <fieldset class="flex gap-4 flex-wrap">
         <label class="flex gap-2 items-center">
           <input
@@ -206,7 +200,7 @@
             :value="WinStatus_V2.GOOD_WINS"
             class="border border-stone-500"
           />
-          <span class="block whitespace-nowrap"> Good wins </span>
+          <span class="block whitespace-nowrap"> {{ t('common.goodWins') }} </span>
         </label>
         <label class="flex gap-2 items-center">
           <input
@@ -215,7 +209,7 @@
             :value="WinStatus_V2.EVIL_WINS"
             class="border border-stone-500"
           />
-          <span class="block whitespace-nowrap"> Evil wins </span>
+          <span class="block whitespace-nowrap"> {{ t('common.evilWins') }} </span>
         </label>
         <label class="flex gap-2 items-center">
           <input
@@ -224,7 +218,7 @@
             :value="WinStatus_V2.NOT_RECORDED"
             class="border border-stone-500"
           />
-          <span class="block whitespace-nowrap"> Not recorded </span>
+          <span class="block whitespace-nowrap">{{ t('gameEditor.notRecorded') }}</span>
         </label>
         <label v-if="editingMultipleGames" class="flex gap-2 items-center">
           <input
@@ -233,11 +227,11 @@
             :value="undefined"
             class="border border-stone-500"
           />
-          <span class="block whitespace-nowrap"> Not updated </span>
+          <span class="block whitespace-nowrap">{{ t('gameEditor.notUpdated') }}</span>
         </label>
         <label v-if="!editingMultipleGames" class="flex gap-2 items-center">
           <input type="checkbox" v-model="game.ignore_for_stats" />
-          <span class="block whitespace-nowrap">Ignore for stats</span>
+          <span class="block whitespace-nowrap">{{ t('gameEditor.ignoreForStats') }}</span>
         </label>
       </fieldset>
     </fieldset>
@@ -245,7 +239,7 @@
       v-if="!advancedModeEnabled && !game.is_storyteller"
       class="flex justify-center md:justify-normal flex-wrap gap-5 border rounded border-stone-500 p-4 my-3"
     >
-      <legend>Your Roles</legend>
+      <legend>{{ t('gameEditor.yourRoles') }}</legend>
 
       <div
         v-for="(character, i) in game.player_characters"
@@ -260,9 +254,9 @@
           icon="x-lg"
           display="icon-only"
           circular
-          title="Remove this role"
+          :title="t('gameEditor.removeRole')"
         >
-          Remove
+          {{ t('gameEditor.removeRole') }}
         </Button>
         <Token
           :character="character"
@@ -274,10 +268,9 @@
           @clickAlignment="toggleAlignment(character)"
           id="player-role"
           relatedId="related-player-role"
-          tokenTooltip="The role this player had in the game"
+          :tokenTooltip="t('gameEditor.tokenTooltip')"
           :relatedTokenTooltip="{
-            content:
-              '<div class=\'w-[250px]\'>The related role this player saw (if applicable). Example: The Drunk sees the Empath, or the Pixie sees the Snake Charmer</div>',
+            content: `<div class='w-[250px]'>${t('gameEditor.relatedTokenTooltip')}</div>`,
             html: true,
           }"
         />
@@ -285,7 +278,7 @@
       <div class="rounded p-4 flex justify-center items-center aspect-square">
         <Token outline size="lg" class="font-sorts">
           <button type="button" @click="addCharacter" class="w-full h-full">
-            Add Character
+            {{ t('gameEditor.addCharacter') }}
           </button>
         </Token>
       </div>
@@ -294,7 +287,7 @@
       v-if="!editingMultipleGames && advancedModeEnabled"
       class="flex justify-center md:justify-normal flex-wrap gap-5 border rounded border-stone-500 p-4 my-3"
     >
-      <legend>Grimoire</legend>
+      <legend>{{ t('gameEditor.grimoire') }}</legend>
       <div
         v-if="!game.player_count"
         :style="
@@ -310,15 +303,15 @@
         <div
           class="font-sorts text-white bg-black/60 p-4 text-xl rounded shadow-md text-center"
         >
-          <p class="p-2">Select player count to begin</p>
-          <p class="p-2">OR</p>
+          <p class="p-2">{{ t('gameEditor.grimoireSelectPlayerCount') }}</p>
+          <p class="p-2">{{ t('gameEditor.grimoireOr') }}</p>
           <div class="flex justify-center">
             <Button
               color="primary"
               type="button"
               @click="showCopyGrimoireDialog = true"
             >
-              Copy an existing grimoire
+              {{ t('gameEditor.grimoireCopyExisting') }}
             </Button>
           </div>
         </div>
@@ -348,7 +341,9 @@
             <div
               class="absolute bottom-0 w-full xl:w-[calc(100%-0.625rem)] text-center bg-gradient-to-b from-transparent via-stone-800 to-stone-800 text-white"
             >
-              Page {{ grimPage + 1 }} of {{ game.grimoire.length }}
+              {{ t('gameEditor.grimoirePageOf')
+                .replace('{current}', String(grimPage + 1))
+                .replace('{total}', String(game.grimoire.length)) }}
             </div>
           </div>
         </div>
@@ -360,7 +355,7 @@
           icon="journal-prev"
           class="md:absolute bottom-1 left-1"
         >
-          Previous page
+          {{ t('gameEditor.previousPage') }}
         </Button>
         <Button
           v-if="game.grimoire.length > 1"
@@ -368,9 +363,9 @@
           color="negative"
           icon="journal-x"
           class="md:absolute top-1 right-4 z-10"
-          title="Delete this page"
+          :title="t('gameEditor.deletePage')"
         >
-          Delete page
+          {{ t('gameEditor.deletePage') }}
         </Button>
         <Button
           type="button"
@@ -381,9 +376,7 @@
           class="md:absolute bottom-1 right-4"
         >
           <span v-if="grimPage <= game.grimoire.length - 1">
-            {{
-              grimPage === game.grimoire.length - 1 ? "Add page" : "Next page"
-            }}
+            {{ grimPage === game.grimoire.length - 1 ? t('gameEditor.addPage') : t('gameEditor.nextPage') }}
           </span>
         </Button>
       </div>
@@ -392,9 +385,11 @@
       v-if="!editingMultipleGames"
       class="block border rounded border-stone-500 p-4 my-3 bg-center bg-cover"
     >
-      <legend>Additional Details</legend>
+      <legend>{{ t('gameEditor.additionalDetails') }}</legend>
       <details :open="game.demon_bluffs.length > 0">
-        <summary class="cursor-pointer">Demon Bluffs</summary>
+        <summary class="cursor-pointer">
+          {{ t('gameEditor.demonBluffs') }}
+        </summary>
         <div class="flex justify-center md:justify-normal flex-wrap gap-5">
           <div
             v-for="(character, i) in game.demon_bluffs"
@@ -409,9 +404,9 @@
               icon="x-lg"
               display="icon-only"
               circular
-              title="Remove this demon bluff"
+              :title="t('gameEditor.removeDemonBluff')"
             >
-              Remove
+              {{ t('gameEditor.removeDemonBluff') }}
             </Button>
             <Token
               :character="character"
@@ -434,14 +429,16 @@
                 @click="addDemonBluff"
                 class="w-full h-full p-1 text-sm"
               >
-                Add Demon Bluff
+                {{ t('gameEditor.addDemonBluff') }}
               </button>
             </Token>
           </div>
         </div>
       </details>
       <details :open="game.fabled.length > 0">
-        <summary class="cursor-pointer">Fabled</summary>
+        <summary class="cursor-pointer">
+          {{ t('gameEditor.fabled') }}
+        </summary>
         <div class="flex justify-center md:justify-normal flex-wrap gap-5">
           <div
             v-for="(character, i) in game.fabled"
@@ -455,9 +452,9 @@
               icon="x-lg"
               display="icon-only"
               circular
-              title="Remove this fabled"
+              :title="t('gameEditor.removeFabled')"
             >
-              Remove
+              {{ t('gameEditor.removeFabled') }}
             </Button>
             <Token
               :character="character"
@@ -477,7 +474,7 @@
                 @click="addFabled"
                 class="w-full h-full p-1 text-sm"
               >
-                Add Fabled
+                {{ t('gameEditor.addFabled') }}
               </button>
             </Token>
           </div>
@@ -485,20 +482,20 @@
       </details>
     </fieldset>
     <fieldset class="border rounded border-stone-500 p-4 my-3">
-      <legend>Notes</legend>
+      <legend>{{ t('gameEditor.notes') }}</legend>
       <ExpandingTextarea
         v-if="!editingMultipleGames"
         v-model="game.notes"
         class="block w-full border border-stone-500 rounded-md p-2 min-h-[10rem]"
       />
       <label class="block py-2">
-        <span class="block">Add Tag</span>
+        <span class="block">{{ t('gameEditor.addTag') }}</span>
         <Input
           type="text"
           v-model="tagsInput"
           @keydown.enter.prevent="addTag"
           list="tags"
-          placeholder="Enter a tag, then press enter"
+          :placeholder="t('gameEditor.addTagPlaceholder')"
         />
         <datalist id="tags">
           <option
@@ -513,17 +510,17 @@
           @click.prevent="game.tags.splice(index, 1)"
           size="sm"
           removableTag
-          :title="`Remove ${tag}`"
+          :title="t('gameEditor.removeTag').replace('{tag}', tag)"
         >
           {{ tag }}
         </Button>
       </div>
     </fieldset>
     <fieldset class="border rounded border-stone-500 p-4 my-3">
-      <legend>External Links</legend>
+      <legend>{{ t('gameEditor.externalLinks') }}</legend>
       <div class="w-full flex flex-col md:flex-row gap-5">
         <label class="flex-1">
-          <span class="block">BoardGameGeek Game URL</span>
+          <span class="block">{{ t('gameEditor.bggUrl') }}</span>
           <div class="flex items-center">
             <IconUI id="bgg" color="bgg" size="lg" />
             <Input
@@ -533,8 +530,7 @@
             />
           </div>
           <Alert v-if="!bggIdIsValid" color="negative" class="mt-1">
-            Invalid BoardGameGeek URL. Format should be:
-            https://boardgamegeek.com/play/details/[game_id]
+            {{ t('gameEditor.bggInvalidUrlMessage') }}
           </Alert>
         </label>
       </div>
@@ -543,10 +539,10 @@
       v-if="!editingMultipleGames"
       class="border rounded border-stone-500 p-4 my-3"
     >
-      <legend>Images</legend>
+      <legend>{{ t('gameEditor.images') }}</legend>
       <div class="flex flex-col gap-5">
         <Button type="button" @click="uploadFile" icon="upload">
-          Upload Images
+          {{ t('gameEditor.uploadImages') }}
         </Button>
         <div class="flex flex-wrap gap-5">
           <div class='relative' v-for="file in game.image_urls" :key="file">
@@ -563,9 +559,9 @@
               icon="x-lg"
               display="icon-only"
               circular
-              title="Remove this image"
+              :title="t('gameEditor.removeImage')"
             >
-              Remove
+              {{ t('gameEditor.removeImage') }}
             </Button>
           </div>
         </div>
@@ -581,9 +577,11 @@
       >
         <template v-if="inFlight">
           <Spinner />
-          Saving...
+          {{ t('gameEditor.saving') }}
         </template>
-        <template v-else>Save Game</template>
+        <template v-else>
+          {{ t('gameEditor.saveGame') }}
+        </template>
       </Button>
     </div>
     
@@ -597,11 +595,9 @@
   />
   <Dialog v-model:visible="showCopyGrimoireDialog" size="xl">
     <template #title>
-      <h2 class="text-2xl font-bold">Copy Existing Grimoire</h2>
+      <h2 class="text-2xl font-bold">{{ t('gameEditor.grimoireCopyExistingTitle') }}</h2>
       <p class="text-lg text-stone-400 py-4">
-        Click on a game to copy the grimoire data to this game.
-        (Grimoire data includes player count, player data, 
-        location, community, ...)
+        {{ t('gameEditor.grimoireCopyExistingDescription') }}
       </p>
     </template>
 
@@ -615,6 +611,8 @@
 import type { Alignment } from "@prisma/client";
 import type { RoleType } from "~/composables/useRoles";
 import naturalOrder from "natural-order";
+
+const { t } = useI18n();
 import { useLocalStorage } from "@vueuse/core";
 import { WinStatus_V2, type GameRecord } from "~/composables/useGames";
 import dayjs from "dayjs";
@@ -853,8 +851,8 @@ const showCommunityPrivacyAlert = computed(() => {
 
 const communityPrivacyAlertText = computed(() => {
   return props.game.privacy === "FRIENDS_ONLY"
-    ? "Community-tagged games appear in its lists/stats, even if 'Friends Only'. Non-friends won't see a link to the full game."
-    : "Community-tagged games appear in its lists/stats, even if 'Private'. Others won't see a link to the full game.";
+    ? t("gameEditor.communityPrivacyAlertFriendsOnly")
+    : t("gameEditor.communityPrivacyAlertPrivate");
 });
 
 const myGames = computed(() => {
@@ -1113,7 +1111,7 @@ watchEffect(async () => {
 
       scriptVersions.value = await fetchScriptVersions(props.game.script_id);
     } catch {
-      alert("Unable to load the selected script!");
+      alert(t("gameEditor.unableToLoadScript"));
       // Do nothing
     }
     fetchingScriptVersions.value = false;
