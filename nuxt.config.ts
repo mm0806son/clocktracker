@@ -19,6 +19,7 @@ export default defineNuxtConfig({
     "floating-vue/nuxt",
     "nuxt-cron",
     "nuxt-bugsnag",
+    "@nuxtjs/i18n",
   ],
 
   app: {
@@ -26,7 +27,7 @@ export default defineNuxtConfig({
       charset: "utf-8",
       viewport: "width=device-width, initial-scale=1",
       htmlAttrs: {
-        lang: "en",
+        lang: "zh-CN",
       },
       link: [
         { rel: "stylesheet", href: "/index.css" },
@@ -99,7 +100,7 @@ export default defineNuxtConfig({
         },
         {
           name: "apple-mobile-web-app-title",
-          content: "ClockTracker",
+          content: "染·钟楼谜团 记录器",
         },
         {
           name: "apple-mobile-web-app-capable",
@@ -117,6 +118,15 @@ export default defineNuxtConfig({
     public: {
       assetVersion: process.env.NUXT_PUBLIC_ASSET_VERSION ?? "v1",
     },
+  },
+
+  i18n: {
+    locales: [
+      { code: "en", name: "English" },
+      { code: "zh-CN", name: "中文" },
+    ],
+    defaultLocale: "zh-CN",
+    strategy: "prefix_except_default",
   },
 
   bugsnag: {
@@ -183,9 +193,9 @@ export default defineNuxtConfig({
       ],
     },
     manifest: {
-      name: "ClockTracker",
-      short_name: "ClockTracker",
-      description: "Record your game details from Blood on the Clocktower",
+      name: "染·钟楼谜团 记录器",
+      short_name: "钟楼记录器",
+      description: "记录你的《染·钟楼谜团》对局和数据",
       theme_color: "#292524",
       background_color: "#1C1917",
       orientation: "any",

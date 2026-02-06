@@ -234,5 +234,9 @@ export const zhCN = {
       traveler: "旅行者",
     },
   },
+  locale: {
+    en: "English",
+    zhCN: "中文",
+  },
 } as const;
 
