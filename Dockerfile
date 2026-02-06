@@ -22,8 +22,12 @@ WORKDIR /app
 
 COPY --from=builder /app .
 
+COPY docker-entrypoint /usr/local/bin/docker-entrypoint
+RUN chmod +x /usr/local/bin/docker-entrypoint
+
 ENV HOST 0.0.0.0
 ENV PORT 8080
 
 # Source: https://nuxt.com/docs/getting-started/deployment#entry-point
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint"]
 CMD ["node", ".output/server/index.mjs"]
