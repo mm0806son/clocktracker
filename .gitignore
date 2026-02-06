@@ -7,15 +7,18 @@ dist
 
 # Node dependencies
 node_modules
+.pnpm-store
 
 # Logs
 logs
 *.log
+job_logs
 
 # Misc
 .DS_Store
 .fleet
 .idea
+.vscode
 
 # Local env files
 .env
@@ -29,3 +32,4 @@ tmp
 test-results/*
 playwright-report/*
 tests/e2e/test-account.json
+start.sh
