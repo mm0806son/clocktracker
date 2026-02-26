@@ -1,10 +1,10 @@
 import type { User } from "@supabase/supabase-js";
 import { PrivacySetting } from "@prisma/client";
-import { anonymizeGame, GameRecord } from "~/server/utils/anonymizeGame";
+import { anonymizeGame, type GameRecord } from "~/server/utils/anonymizeGame";
 import { prisma } from "./prisma";
 
 export async function fetchGames(user_id: string, me: User | null) {
-  const games = await prisma.game.findMany({
+  const [games, isFriend] = await Promise.all([prisma.game.findMany({
     where: {
       deleted: false,
       user_id,
@@ -204,33 +204,34 @@ export async function fetchGames(user_id: string, me: User | null) {
           },
         },
       },
-      demon_bluffs: {
-        include: {
-          role: {
-            select: {
-              token_url: true,
-              type: true,
-            },
-          },
-        },
-      },
-      fabled: {
-        include: {
-          role: {
-            select: {
-              token_url: true,
-              type: true,
-            },
-          },
-        },
-      },
       grimoire: {
         include: {
           tokens: {
-            include: {
-              role: true,
-              related_role: true,
-              reminders: true,
+            select: {
+              id: true,
+              role_id: true,
+              related_role_id: true,
+              alignment: true,
+              is_dead: true,
+              used_ghost_vote: true,
+              order: true,
+              grimoire_id: true,
+              player_name: true,
+              player_id: true,
+              created_at: true,
+              role: {
+                select: {
+                  token_url: true,
+                  type: true,
+                  initial_alignment: true,
+                  name: true,
+                },
+              },
+              related_role: {
+                select: {
+                  token_url: true,
+                },
+              },
               player: {
                 select: {
                   display_name: true,
@@ -279,12 +280,9 @@ export async function fetchGames(user_id: string, me: User | null) {
         id: "desc",
       },
     ],
-  });
-
-  const anonymizedGames: GameRecord[] = [];
-
-  // We need to know if the user is a friend of the game creator
-  const isFriend = !!(await prisma.friend.findFirst({
+  }),
+  // Run friend check in parallel with games query
+  prisma.friend.findFirst({
     where: {
       OR: [
         {
@@ -297,7 +295,10 @@ export async function fetchGames(user_id: string, me: User | null) {
         },
       ],
     },
-  }));
+  }).then((r) => !!r),
+  ]);
+
+  const anonymizedGames: GameRecord[] = [];
 
   for (const game of games) {
     anonymizedGames.push(await anonymizeGame(game as GameRecord, me, isFriend));

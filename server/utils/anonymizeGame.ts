@@ -6,7 +6,7 @@ import type {
   ReminderToken,
 } from "@prisma/client";
 import { PrivacySetting } from "@prisma/client";
-import { User } from "@supabase/supabase-js";
+import type { User } from "@supabase/supabase-js";
 
 export type FullCharacter = Character & {
   role?: {
@@ -32,7 +32,7 @@ export type GameRecord = Game & {
         name: string;
       };
       related_role?: { token_url: string };
-      reminders: ReminderToken[];
+      reminders?: ReminderToken[];
       player?: {
         username: string;
         display_name: string;

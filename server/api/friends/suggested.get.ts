@@ -1,5 +1,5 @@
-import { PrivacySetting, UserSettings } from "@prisma/client";
-import { User } from "@supabase/supabase-js";
+import { PrivacySetting, type UserSettings } from "@prisma/client";
+import type { User } from "@supabase/supabase-js";
 import naturalOrder from "natural-order";
 import { prisma } from "~/server/utils/prisma";
 
@@ -71,10 +71,10 @@ export default defineEventHandler(async (handler) => {
                   bio: true,
                   location: true,
                   privacy: true,
-                  charts: true,
                 },
               },
             },
+            take: 20,
           },
         },
       },
@@ -129,13 +129,13 @@ export default defineEventHandler(async (handler) => {
       bio: true,
       location: true,
       privacy: true,
-      charts: true,
     },
     orderBy: [
       {
         created_at: "desc",
       },
     ],
+    take: 50,
   });
 
   return naturalOrder([

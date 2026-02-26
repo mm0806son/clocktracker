@@ -90,7 +90,7 @@
                                     <template v-if="game.data.ls_game_id">
                                         Game
                                         {{
-                                            game.data.associated_script.version
+                                            game.data.associated_script?.version
                                         }}
                                         of
                                     </template>
@@ -393,13 +393,13 @@
                             <!-- Row -->
                             <div
                                 v-if="
-                                    game.data.demon_bluffs.length ||
-                                    game.data.fabled.length
+                                    game.data.demon_bluffs?.length ||
+                                    game.data.fabled?.length
                                 "
                                 class="metadata-row"
                             >
                                 <div
-                                    v-if="game.data.demon_bluffs.length"
+                                    v-if="game.data.demon_bluffs?.length"
                                     class="metadata-item"
                                 >
                                     <span class="metadata-label"
@@ -422,13 +422,13 @@
                                     </div>
                                 </div>
                                 <div
-                                    v-if="game.data.fabled.length"
+                                    v-if="game.data.fabled?.length"
                                     class="metadata-item"
                                 >
                                     <span class="metadata-label">
                                         <template
                                             v-if="
-                                                game.data.fabled.some(
+                                                game.data.fabled?.some(
                                                     (r) =>
                                                         r.role?.type ===
                                                         'FABLED',
@@ -439,12 +439,12 @@
                                         </template>
                                         <template
                                             v-if="
-                                                game.data.fabled.some(
+                                                game.data.fabled?.some(
                                                     (r) =>
                                                         r.role?.type ===
                                                         'FABLED',
                                                 ) &&
-                                                game.data.fabled.some(
+                                                game.data.fabled?.some(
                                                     (r) =>
                                                         r.role?.type ===
                                                         'LORIC',
@@ -455,7 +455,7 @@
                                         </template>
                                         <template
                                             v-if="
-                                                game.data.fabled.some(
+                                                game.data.fabled?.some(
                                                     (r) =>
                                                         r.role?.type ===
                                                         'LORIC',
@@ -676,7 +676,7 @@
                     </Button>
                     <div class="w-screen md:w-full overflow-scroll min-h-48">
                         <Grimoire
-                            :tokens="game.data.grimoire[grimPage].tokens"
+                            :tokens="game.data.grimoire[grimPage].tokens as any"
                             readonly
                             :canClaimSeat="canClaimSeat"
                             @claimSeat="claimSeat"
@@ -1008,7 +1008,7 @@ useHead({
     }`,
     meta: [
         {
-            hid: "description",
+            key: "description",
             name: "description",
             content: `Game of ${gameMetadata.data.value!.script} played by ${
                 gameMetadata.data.value!.user!.display_name
