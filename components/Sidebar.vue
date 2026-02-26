@@ -126,6 +126,9 @@
             </li>
         </ul>
         <ul class="sidebar-bottom">
+            <li>
+                <LanguageSwitcher />
+            </li>
             <template v-if="me.status === Status.SUCCESS">
                 <li>
                     <NavLink

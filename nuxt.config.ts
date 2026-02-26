@@ -19,6 +19,7 @@ export default defineNuxtConfig({
     "floating-vue/nuxt",
     "nuxt-cron",
     "nuxt-bugsnag",
+    "@nuxtjs/i18n",
   ],
 
   app: {
@@ -107,6 +108,23 @@ export default defineNuxtConfig({
         },
       ],
     },
+  },
+
+  i18n: {
+    locales: [
+      { code: 'en', name: 'English', file: 'en.ts' },
+      { code: 'zh-CN', name: '中文', file: 'zh-CN.ts' }
+    ],
+    defaultLocale: 'en',
+    strategy: 'no_prefix',
+    lazy: true,
+    langDir: 'locales',
+    vueI18n: './locales/i18n.config.ts',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_redirected',
+      fallbackLocale: 'en'
+    }
   },
 
   supabase: {
